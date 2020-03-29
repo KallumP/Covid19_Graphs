@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiHelper.cs" />
+    <Compile Include="DailyCases.cs" />
     <Compile Include="CountryData.cs" />
     <Compile Include="Covid19Graphs.cs">
       <SubType>Form</SubType>

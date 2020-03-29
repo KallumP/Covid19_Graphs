@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 namespace Covid19Graphs {
     static class CountryData {
 
-        public async static Task<Confirmed> PullConfirmedData(string countrySlug) {
+        public async static Task<DailyCases[]> PullConfirmedData(string countrySlug) {
 
             //sets up the url for the passed coutry
-            string url = $"https://api.covid19api.com/dayone/country/{ countrySlug }/status/confirmed";
+            string url = $"https://api.covid19api.com/total/dayone/country/{ countrySlug }/status/confirmed";
 
             using (HttpResponseMessage response = await ApiHelper.ApiClient.GetAsync(url)) {
 
                 //checks if the url request was successful
                 if (response.IsSuccessStatusCode) {
 
-                    //turns the url response data into an object
-                    Confirmed confirmed = await response.Content.ReadAsAsync<Confirmed>();
+                    //turns the url response json data into an array of cases objects
+                    DailyCases[] allConfirmed = await response.Content.ReadAsAsync<DailyCases[]>();
 
                     //returns the object
-                    return confirmed;
+                    return allConfirmed;
 
                 } else {
 
