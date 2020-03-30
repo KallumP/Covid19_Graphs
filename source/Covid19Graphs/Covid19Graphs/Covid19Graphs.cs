@@ -12,6 +12,7 @@ namespace Covid19Graphs {
     public partial class Covid19Graphs : Form {
 
         List<Data> allData;
+        List<Data> normalizedData;
 
         int pointSize = 9;
 
@@ -47,23 +48,34 @@ namespace Covid19Graphs {
             pulledCases = await CountryData.PullConfirmedData("italy");
             allData.Add(new Data("Italy", pulledCases, Color.Purple));
 
+            //pulls the UK data
+            pulledCases = await CountryData.PullConfirmedData("US");
+            allData.Add(new Data("US", pulledCases, Color.Green));
+
+            //pulls the UK data
+            pulledCases = await CountryData.PullConfirmedData("spain");
+            allData.Add(new Data("Spain", pulledCases, Color.Blue));
+
         }
 
         private void graph_Paint(object sender, PaintEventArgs e) {
 
             //finds out how much to separate the points by
-            float XpointSeparation = (float)graph.Width / (float)Data.longestArray;
-            float YpointSeparation = (float)graph.Height / (float)Data.biggestCase;
+            float xPointSeparation = (float)graph.Width / (float)Data.longestArray;
+            float yPointSeparation = (float)graph.Height / (float)Data.biggestCase;
 
+            int xNormalizer;
 
             //loops through each of the datas
             for (int i = 0; i < allData.Count; i++) {
 
                 SolidBrush b = new SolidBrush(allData[i].graphColor);
 
+                xNormalizer = Data.longestArray - allData[i].listOfDailyCases.Length;
+
                 for (int j = 0; j < allData[i].listOfDailyCases.Length; j++) {
 
-                    Point point = new Point((int)(j * XpointSeparation), graph.Height - (int)(allData[i].listOfDailyCases[j].Cases * YpointSeparation));
+                    Point point = new Point((int)((xNormalizer + j) * xPointSeparation), graph.Height - (int)(allData[i].listOfDailyCases[j].Cases * yPointSeparation));
 
 
                     e.Graphics.FillEllipse(
@@ -79,6 +91,19 @@ namespace Covid19Graphs {
 
         private void Covid19Graphs_Resize(object sender, EventArgs e) {
             graph.Invalidate();
+        }
+
+        void NormalizingData(int cutoffPoint) {
+
+            
+        }
+
+        private void normalise_btn_Click(object sender, EventArgs e) {
+            
+            NormalisedData n = new NormalisedData(allData, this);
+
+            n.Show();
+            Hide();
         }
     }
 }

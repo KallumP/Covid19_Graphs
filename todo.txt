@@ -1,0 +1,3 @@
+turn things like point size into a static class called settings
+
+try to turn the json passing into a list rather than an array
