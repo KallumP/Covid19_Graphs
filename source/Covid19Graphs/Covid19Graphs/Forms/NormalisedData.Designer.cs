@@ -43,7 +43,7 @@
             // 
             // back_btn
             // 
-            this.back_btn.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.back_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.back_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.back_btn.Location = new System.Drawing.Point(369, 12);
             this.back_btn.Name = "back_btn";

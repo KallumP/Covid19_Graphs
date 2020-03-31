@@ -13,14 +13,14 @@ namespace Covid19Graphs {
         public static int longestArray = -1;
         public static int biggestCase = -1;
 
-        public string country { get; set; }
+        public string Country { get; set; }
         public DailyCases[] listOfDailyCases { get; set; }
-        public Color graphColor { get; set; }
+        public Color GraphColor { get; set; }
 
         public Data(string _country, DailyCases[] _cases, Color _color) {
-            country = _country;
+            Country = _country;
             listOfDailyCases = _cases;
-            graphColor = _color;
+            GraphColor = _color;
 
             //checks if the new array is longers than the current longest array
             if (_cases.Length > longestArray)

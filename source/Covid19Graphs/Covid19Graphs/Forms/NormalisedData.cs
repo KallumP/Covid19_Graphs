@@ -26,7 +26,7 @@ namespace Covid19Graphs {
 
             mainWindow = _mainWindow;
 
-            LoadData(1000);
+            LoadData(100);
 
             graph.Invalidate();
         }
@@ -102,7 +102,7 @@ namespace Covid19Graphs {
             //loops through each of the datas
             for (int i = 0; i < normalisedData.Count; i++) {
 
-                SolidBrush b = new SolidBrush(normalisedData[i].graphColor);
+                SolidBrush b = new SolidBrush(normalisedData[i].GraphColor);
 
                 for (int j = 0; j < normalisedData[i].listOfDailyCases.Length; j++) {
 
