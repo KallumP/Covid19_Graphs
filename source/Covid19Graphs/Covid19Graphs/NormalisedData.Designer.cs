@@ -30,15 +30,20 @@
             // 
             // graph
             // 
+            this.graph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.graph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.graph.Location = new System.Drawing.Point(13, 13);
             this.graph.Name = "graph";
             this.graph.Size = new System.Drawing.Size(350, 437);
             this.graph.TabIndex = 0;
             this.graph.TabStop = false;
+            this.graph.Paint += new System.Windows.Forms.PaintEventHandler(this.graph_Paint);
             // 
             // back_btn
             // 
+            this.back_btn.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.back_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.back_btn.Location = new System.Drawing.Point(369, 12);
             this.back_btn.Name = "back_btn";
@@ -57,6 +62,7 @@
             this.Controls.Add(this.graph);
             this.Name = "NormalisedData";
             this.Text = "NormalisedData";
+            this.Resize += new System.EventHandler(this.NormalisedData_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.graph)).EndInit();
             this.ResumeLayout(false);
 

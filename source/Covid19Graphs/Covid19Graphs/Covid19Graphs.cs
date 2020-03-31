@@ -12,9 +12,8 @@ namespace Covid19Graphs {
     public partial class Covid19Graphs : Form {
 
         List<Data> allData;
-        List<Data> normalizedData;
 
-        int pointSize = 9;
+        int pointSize = 10;
 
 
 
@@ -48,21 +47,23 @@ namespace Covid19Graphs {
             pulledCases = await CountryData.PullConfirmedData("italy");
             allData.Add(new Data("Italy", pulledCases, Color.Purple));
 
-            //pulls the UK data
+            //pulls the US data
             pulledCases = await CountryData.PullConfirmedData("US");
             allData.Add(new Data("US", pulledCases, Color.Green));
 
-            //pulls the UK data
-            pulledCases = await CountryData.PullConfirmedData("spain");
-            allData.Add(new Data("Spain", pulledCases, Color.Blue));
+            //pulls the Sri lanka data
+            pulledCases = await CountryData.PullConfirmedData("sri-lanka");
+            allData.Add(new Data("Sri Lanka", pulledCases, Color.Blue));
 
         }
 
         private void graph_Paint(object sender, PaintEventArgs e) {
 
+            int graphPush = 20;
+
             //finds out how much to separate the points by
             float xPointSeparation = (float)graph.Width / (float)Data.longestArray;
-            float yPointSeparation = (float)graph.Height / (float)Data.biggestCase;
+            float yPointSeparation = ((float)graph.Height - graphPush) / (float)Data.biggestCase;
 
             int xNormalizer;
 
@@ -81,7 +82,7 @@ namespace Covid19Graphs {
                     e.Graphics.FillEllipse(
                         b,
                         point.X,
-                        point.Y,
+                        point.Y - graphPush,
                         pointSize,
                         pointSize);
 
@@ -95,11 +96,11 @@ namespace Covid19Graphs {
 
         void NormalizingData(int cutoffPoint) {
 
-            
+
         }
 
         private void normalise_btn_Click(object sender, EventArgs e) {
-            
+
             NormalisedData n = new NormalisedData(allData, this);
 
             n.Show();

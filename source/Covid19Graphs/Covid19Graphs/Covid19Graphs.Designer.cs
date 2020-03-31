@@ -30,8 +30,9 @@
             // 
             // graph
             // 
-            this.graph.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.graph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.graph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.graph.Location = new System.Drawing.Point(13, 13);
             this.graph.Name = "graph";
@@ -42,6 +43,7 @@
             // 
             // normalise_btn
             // 
+            this.normalise_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.normalise_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.normalise_btn.Location = new System.Drawing.Point(369, 12);
             this.normalise_btn.Name = "normalise_btn";
