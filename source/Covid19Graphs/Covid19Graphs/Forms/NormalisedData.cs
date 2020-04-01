@@ -95,9 +95,11 @@ namespace Covid19Graphs {
 
         private void graph_Paint(object sender, PaintEventArgs e) {
 
+            int graphPush = 20;
+
             //finds out how much to separate the points by
             float xPointSeparation = (float)graph.Width / (float)longestArray;
-            float yPointSeparation = (float)graph.Height / (float)Data.biggestCase;
+            float yPointSeparation = ((float)graph.Height - graphPush) / (float)Data.biggestCase;
 
             //loops through each of the datas
             for (int i = 0; i < normalisedData.Count; i++) {
@@ -112,7 +114,7 @@ namespace Covid19Graphs {
                     e.Graphics.FillEllipse(
                         b,
                         point.X,
-                        point.Y,
+                        point.Y - graphPush,
                         pointSize,
                         pointSize);
                 }
