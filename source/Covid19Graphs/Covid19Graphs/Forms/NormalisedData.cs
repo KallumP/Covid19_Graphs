@@ -110,7 +110,6 @@ namespace Covid19Graphs {
 
                     Point point = new Point((int)(j * xPointSeparation), graph.Height - (int)(normalisedData[i].listOfDailyCases[j].Cases * yPointSeparation));
 
-
                     e.Graphics.FillEllipse(
                         b,
                         point.X,

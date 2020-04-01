@@ -15,7 +15,7 @@ namespace Covid19Graphs {
 
         int pointSize = 10;
 
-        public List<TextBox> countryNames_txt { get; set; }
+        public List<Label> countryNames_txt { get; set; }
 
         /// <summary>
         /// Constructor
@@ -37,7 +37,7 @@ namespace Covid19Graphs {
             //sets up the list of data point arrays
             allData = new List<Data>();
 
-            countryNames_txt = new List<TextBox>();
+            countryNames_txt = new List<Label>();
 
             await LoadData();
 
@@ -50,11 +50,10 @@ namespace Covid19Graphs {
         /// <returns></returns>
         private async Task LoadData() {
 
-            await PullData("united-kingdom", "United Kingdom", Color.Red, new Point(normalise_btn.Location.X, normalise_btn.Location.Y + 30));
+            await PullData("united-kingdom", "UK", Color.Red, new Point(normalise_btn.Location.X, normalise_btn.Location.Y + 30));
             await PullData("italy", "Italy", Color.Purple, countryNames_txt[countryNames_txt.Count - 1].Location);
             await PullData("US", "America", Color.Green, countryNames_txt[countryNames_txt.Count - 1].Location);
             await PullData("sri-lanka", "Sri Lanka", Color.Blue, countryNames_txt[countryNames_txt.Count - 1].Location);
-        
         }
 
         /// <summary>
@@ -68,7 +67,7 @@ namespace Covid19Graphs {
         async Task PullData(string slug, string _countryName, Color graphColor, Point lastTxtLoc) {
 
             DailyCases[] pulledCases;
-            TextBox t = new TextBox();
+            Label t = new Label();
 
             //pulls the entered country data
             pulledCases = await CountryData.PullConfirmedData(slug);
@@ -79,7 +78,10 @@ namespace Covid19Graphs {
             //creates a new text box with the country name and color
             t.Location = new Point(lastTxtLoc.X, lastTxtLoc.Y + 30);
             t.Text = _countryName;
+            t.Font = new Font(t.Font.FontFamily, 12); 
             t.ForeColor = graphColor;
+            t.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            Controls.Add(t);
 
             //adds the new text box
             countryNames_txt.Add(t);
@@ -92,7 +94,7 @@ namespace Covid19Graphs {
         /// <param name="e"></param>
         private void graph_Paint(object sender, PaintEventArgs e) {
 
-            //the amount to pusht the graph up by
+            //the amount to push the graph up by
             int graphPush = 20;
 
             //finds out how much to separate the points by
