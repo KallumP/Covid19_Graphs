@@ -63,32 +63,26 @@ namespace Covid19Graphs {
         /// <returns></returns>
         private async Task LoadDefaultData() {
 
-            int currentIndex = 0;
+            CountryObj toPull;
 
-            do {
+            toPull = CountrySelect.ReturnCountryObj("United Kingdom", allCountries);
+            if (toPull != null)
+                await PullData(toPull, Color.Red, new Point(normalise_btn.Location.X, normalise_btn.Location.Y + 30));
+            
 
-                //checks to see if there is enough countries in the array to add the next index
-                if (allCountries.Count > currentIndex) {
+            toPull = CountrySelect.ReturnCountryObj("Italy", allCountries);
+            if (toPull != null)
+                await PullData(toPull, Color.Purple, countryNames_txt[countryNames_txt.Count - 1].Location);
 
-                    //pulls the first country in the list
-                    await PullData(allCountries[currentIndex], Color.Red, new Point(normalise_btn.Location.X, normalise_btn.Location.Y + 30));
 
-                    //incremeants the index (incase the current country has no cases)
-                    currentIndex++;
+            toPull = CountrySelect.ReturnCountryObj("United States of America", allCountries);
+            if (toPull != null)
+                await PullData(toPull, Color.Green, countryNames_txt[countryNames_txt.Count - 1].Location);
 
-                } else {
 
-                    //regiesters that there wasn't enough countries
-                    currentIndex = -1;
-                }
-
-                //loops while data was not found and there was more countries to check
-            } while ( allData.Count == 0 && currentIndex != -1);
-
-            //await PullData("united-kingdom", "UK", Color.Red, new Point(normalise_btn.Location.X, normalise_btn.Location.Y + 30));
-            //await PullData("italy", "Italy", Color.Purple, countryNames_txt[countryNames_txt.Count - 1].Location);
-            //await PullData("US", "America", Color.Green, countryNames_txt[countryNames_txt.Count - 1].Location);
-            //await PullData("sri-lanka", "Sri Lanka", Color.Blue, countryNames_txt[countryNames_txt.Count - 1].Location);
+            toPull = CountrySelect.ReturnCountryObj("Sri Lanka", allCountries);
+            if (toPull != null)
+                await PullData(toPull, Color.Blue, countryNames_txt[countryNames_txt.Count - 1].Location);
         }
 
         /// <summary>
