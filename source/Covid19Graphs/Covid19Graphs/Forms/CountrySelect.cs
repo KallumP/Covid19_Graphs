@@ -26,6 +26,9 @@ namespace Covid19Graphs {
             ShowAllCountries();
         }
 
+        /// <summary>
+        /// Shows all the countries in the form of checkboxes
+        /// </summary>
         void ShowAllCountries() {
 
             int verticalSpacing = 25;
@@ -49,9 +52,11 @@ namespace Covid19Graphs {
             }
         }
 
-
-
-
+        /// <summary>
+        /// Checks if a country is selected in the main window
+        /// </summary>
+        /// <param name="toCheck"></param>
+        /// <returns></returns>
         bool Selected(CountryObj toCheck) {
 
             //loops through each of the data from the main window
@@ -63,18 +68,22 @@ namespace Covid19Graphs {
                     //returns that this country is selected
                     return true;
 
-
             //returns that the country was not found
             return false;
         }
 
+        /// <summary>
+        /// Event for a checkbox status changing
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         void CheckChange(Object source, EventArgs e) {
 
             //turns the source back into a checkbox object
             CheckBox c = source as CheckBox;
 
             //gets the country object from the name of the clicked checkbox
-            CountryObj country = ReturnCountryObj(c.Text);
+            CountryObj country = ReturnCountryObj(c.Text, countries);
 
             //selects or deselectes based on the check status of the checkbox
             if (c.Checked)
@@ -89,10 +98,10 @@ namespace Covid19Graphs {
         /// </summary>
         /// <param name="countryName">The name of the country to return</param>
         /// <returns></returns>
-        CountryObj ReturnCountryObj(string countryName) {
+        public static CountryObj ReturnCountryObj(string countryName, List<CountryObj> searchLiist) {
 
             //loops through each country
-            foreach (CountryObj c in countries)
+            foreach (CountryObj c in searchLiist)
 
                 //checks if the country being checked is the same as the input
                 if (countryName == c.Country)
@@ -100,17 +109,31 @@ namespace Covid19Graphs {
                     //returns the country being checked
                     return c;
 
-
             //returns null for nothing found
             return null;
         }
 
-        void Select(CountryObj toPullData) {
-            mainWindow.PullData(toPullData, Color.Red, new Point(10, 10));
+        /// <summary>
+        /// Selects the country in the main window
+        /// </summary>
+        /// <param name="toPullData"></param>
+        async void Select(CountryObj toPullData) {
+
+            //checks to see if this is the first country
+            if (mainWindow.countryNames_txt.Count == 0)
+
+                //puts the first label under the normalise button
+                await mainWindow.PullData(toPullData, Color.Red, new Point(mainWindow.normalise_btn.Location.X, mainWindow.normalise_btn.Location.Y + 30));
+
+            else
+
+                //puts the new label under the previous label
+                await mainWindow.PullData(toPullData, Color.Red, mainWindow.countryNames_txt[mainWindow.countryNames_txt.Count - 1].Location);
         }
 
         void DeSelect(CountryObj toRemove) {
 
+            mainWindow.RemoveCountryData(toRemove);
         }
 
         private void back_btn_Click(object sender, EventArgs e) {

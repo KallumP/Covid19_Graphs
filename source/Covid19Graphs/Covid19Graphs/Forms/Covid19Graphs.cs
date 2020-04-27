@@ -55,9 +55,6 @@ namespace Covid19Graphs {
 
             //loads up the default data
             await LoadDefaultData();
-
-            //draws the graph
-            graph.Invalidate();
         }
 
         /// <summary>
@@ -65,7 +62,6 @@ namespace Covid19Graphs {
         /// </summary>
         /// <returns></returns>
         private async Task LoadDefaultData() {
-
 
             int currentIndex = 0;
 
@@ -126,10 +122,49 @@ namespace Covid19Graphs {
                 Controls.Add(t);
 
                 //adds the new text box
-                //countryNames_txt.Add(t);
+                countryNames_txt.Add(t);
+
+                //draws the graph
+                graph.Invalidate();
             }
 
         }
+
+        public void RemoveCountryData(CountryObj toRemove) {
+
+            //loops through all the data
+            for (int i = allData.Count() - 1; i >= 0; i--) {
+
+                //checks if the current country data is the one to remove
+                if (allData[i].CountryData == toRemove) {
+
+                    //loops through each of the textboxes
+                    for (int j = 0; j < countryNames_txt.Count(); j++) {
+
+                        //checks if the text box's text was the same as the country to remove's name
+                        if (countryNames_txt[j].Text == toRemove.Country) {
+
+                            //removes the text box from the text box list and the controls list
+                            Controls.Remove(countryNames_txt[j]);
+                            countryNames_txt.Remove(countryNames_txt[j]);
+                        }
+                    }
+
+                    //removes the country data
+                    allData.Remove(allData[i]);
+
+                    //refinds the biggest values
+                    Data.FindBiggestValues(allData);
+
+                    //redraws the graph
+                    graph.Invalidate();
+
+                    //stops the search
+                    break; ;
+                }
+            }
+        }
+
 
         /// <summary>
         /// Graph paint event

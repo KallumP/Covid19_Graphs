@@ -1,18 +1,7 @@
 turn things like point size into a static class called settings
 
-try to turn the json passing into a list rather than an array
-
-
-
-
-Make a method that searches through allCountries for an input "CountryName" and returns the found object
-
-
-
-if that country is selected already
-	delete that country from main
-else 	
-	call pull data method
+The default data should search for the country in the list of all countries
+and if that search did not return null, add that country
 
 
 color picker for graph color
