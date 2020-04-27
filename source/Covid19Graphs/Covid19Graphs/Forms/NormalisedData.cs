@@ -41,10 +41,10 @@ namespace Covid19Graphs {
                 int nextStart = -1;
 
                 //loops through the data's cases by day
-                for (int j = 0; j < normalisedData[i].listOfDailyCases.Length; j++) {
+                for (int j = 0; j < normalisedData[i].DailyCasesData.Length; j++) {
 
                     //checks if the case number is smaller than the cutoff point
-                    if (normalisedData[i].listOfDailyCases[j].Cases < cutoffPoint) {
+                    if (normalisedData[i].DailyCasesData[j].Cases < cutoffPoint) {
 
                         //does nothing
                         continue;
@@ -52,7 +52,7 @@ namespace Covid19Graphs {
                     } else {
 
                         //saves how big the new array should be
-                        newArrayLength = normalisedData[i].listOfDailyCases.Length - j;
+                        newArrayLength = normalisedData[i].DailyCasesData.Length - j;
 
                         nextStart = j;
 
@@ -74,15 +74,15 @@ namespace Covid19Graphs {
                     int normalisedIncrementor = 0;
 
                     //loops through all the data that is bigger than the cutoff point
-                    for (int j = nextStart; j < normalisedData[i].listOfDailyCases.Length; j++) {
+                    for (int j = nextStart; j < normalisedData[i].DailyCasesData.Length; j++) {
 
-                        normalisedCases[normalisedIncrementor] = normalisedData[i].listOfDailyCases[j];
+                        normalisedCases[normalisedIncrementor] = normalisedData[i].DailyCasesData[j];
 
                         normalisedIncrementor++;
                     }
 
                     //updates the list of cases with the normalised one
-                    normalisedData[i].listOfDailyCases = normalisedCases;
+                    normalisedData[i].DailyCasesData = normalisedCases;
                 }
             }
         }
@@ -106,9 +106,9 @@ namespace Covid19Graphs {
 
                 SolidBrush b = new SolidBrush(normalisedData[i].GraphColor);
 
-                for (int j = 0; j < normalisedData[i].listOfDailyCases.Length; j++) {
+                for (int j = 0; j < normalisedData[i].DailyCasesData.Length; j++) {
 
-                    Point point = new Point((int)(j * xPointSeparation), graph.Height - (int)(normalisedData[i].listOfDailyCases[j].Cases * yPointSeparation));
+                    Point point = new Point((int)(j * xPointSeparation), graph.Height - (int)(normalisedData[i].DailyCasesData[j].Cases * yPointSeparation));
 
                     e.Graphics.FillEllipse(
                         b,

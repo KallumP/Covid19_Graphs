@@ -19,7 +19,7 @@ namespace Covid19Graphs {
         /// <summary>
         /// All the country data
         /// </summary>
-        List<Data> allData;
+        public List<Data> allData { get; set; }
 
         int pointSize = 10;
 
@@ -55,9 +55,6 @@ namespace Covid19Graphs {
 
             //loads up the default data
             await LoadDefaultData();
-
-            //draws the graph
-            graph.Invalidate();
         }
 
         /// <summary>
@@ -66,16 +63,26 @@ namespace Covid19Graphs {
         /// <returns></returns>
         private async Task LoadDefaultData() {
 
-            //checks to see if there is atleast one country in the list
-            if (allCountries.Count > 0)
+            CountryObj toPull;
 
-                //pulls the first country in the list
-                await PullData(allCountries[0], Color.Red, new Point(normalise_btn.Location.X, normalise_btn.Location.Y + 30));
+            toPull = CountrySelect.ReturnCountryObj("United Kingdom", allCountries);
+            if (toPull != null)
+                await PullData(toPull, Color.Red, new Point(normalise_btn.Location.X, normalise_btn.Location.Y + 30));
+            
 
-            //await PullData("united-kingdom", "UK", Color.Red, new Point(normalise_btn.Location.X, normalise_btn.Location.Y + 30));
-            //await PullData("italy", "Italy", Color.Purple, countryNames_txt[countryNames_txt.Count - 1].Location);
-            //await PullData("US", "America", Color.Green, countryNames_txt[countryNames_txt.Count - 1].Location);
-            //await PullData("sri-lanka", "Sri Lanka", Color.Blue, countryNames_txt[countryNames_txt.Count - 1].Location);
+            toPull = CountrySelect.ReturnCountryObj("Italy", allCountries);
+            if (toPull != null)
+                await PullData(toPull, Color.Purple, countryNames_txt[countryNames_txt.Count - 1].Location);
+
+
+            toPull = CountrySelect.ReturnCountryObj("United States of America", allCountries);
+            if (toPull != null)
+                await PullData(toPull, Color.Green, countryNames_txt[countryNames_txt.Count - 1].Location);
+
+
+            toPull = CountrySelect.ReturnCountryObj("Sri Lanka", allCountries);
+            if (toPull != null)
+                await PullData(toPull, Color.Blue, countryNames_txt[countryNames_txt.Count - 1].Location);
         }
 
         /// <summary>
@@ -86,7 +93,7 @@ namespace Covid19Graphs {
         /// <param name="graphColor">The color of the countries graph points</param>
         /// <param name="lastTxtLoc">The point to base the next textbox location on</param>
         /// <returns></returns>
-        async Task PullData(CountryObj countryObj, Color graphColor, Point lastTxtLoc) {
+        public async Task PullData(CountryObj countryObj, Color graphColor, Point lastTxtLoc) {
 
             CasesObj[] pulledCases;
             Label t = new Label();
@@ -94,20 +101,64 @@ namespace Covid19Graphs {
             //pulls the entered country data
             pulledCases = await DataPuller.PullConfirmedData(countryObj.Slug);
 
-            //adds the newly pulled data into the list of all datas
-            allData.Add(new Data(countryObj, pulledCases, graphColor));
+            //checks to see if the pulled country data had any data
+            if (pulledCases.Length > 0) {
 
-            //creates a new text box with the country name and color
-            t.Location = new Point(lastTxtLoc.X, lastTxtLoc.Y + 30);
-            t.Text = countryObj.Country;
-            t.Font = new Font(t.Font.FontFamily, 12);
-            t.ForeColor = graphColor;
-            t.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            Controls.Add(t);
+                //adds the newly pulled data into the list of all datas
+                allData.Add(new Data(countryObj, pulledCases, graphColor));
 
-            //adds the new text box
-            countryNames_txt.Add(t);
+                //creates a new text box with the country name and color
+                t.Location = new Point(lastTxtLoc.X, lastTxtLoc.Y + 30);
+                t.Text = countryObj.Country;
+                t.Font = new Font(t.Font.FontFamily, 12);
+                t.ForeColor = graphColor;
+                t.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+                Controls.Add(t);
+
+                //adds the new text box
+                countryNames_txt.Add(t);
+
+                //draws the graph
+                graph.Invalidate();
+            }
+
         }
+
+        public void RemoveCountryData(CountryObj toRemove) {
+
+            //loops through all the data
+            for (int i = allData.Count() - 1; i >= 0; i--) {
+
+                //checks if the current country data is the one to remove
+                if (allData[i].CountryData == toRemove) {
+
+                    //loops through each of the textboxes
+                    for (int j = 0; j < countryNames_txt.Count(); j++) {
+
+                        //checks if the text box's text was the same as the country to remove's name
+                        if (countryNames_txt[j].Text == toRemove.Country) {
+
+                            //removes the text box from the text box list and the controls list
+                            Controls.Remove(countryNames_txt[j]);
+                            countryNames_txt.Remove(countryNames_txt[j]);
+                        }
+                    }
+
+                    //removes the country data
+                    allData.Remove(allData[i]);
+
+                    //refinds the biggest values
+                    Data.FindBiggestValues(allData);
+
+                    //redraws the graph
+                    graph.Invalidate();
+
+                    //stops the search
+                    break; ;
+                }
+            }
+        }
+
 
         /// <summary>
         /// Graph paint event
@@ -130,12 +181,12 @@ namespace Covid19Graphs {
 
                 SolidBrush b = new SolidBrush(allData[i].GraphColor);
 
-                xNormalizer = Data.longestArray - allData[i].listOfDailyCases.Length;
+                xNormalizer = Data.longestArray - allData[i].DailyCasesData.Length;
 
                 //loops through each of the cases
-                for (int j = 0; j < allData[i].listOfDailyCases.Length; j++) {
+                for (int j = 0; j < allData[i].DailyCasesData.Length; j++) {
 
-                    Point point = new Point((int)((xNormalizer + j) * xPointSeparation), graph.Height - (int)(allData[i].listOfDailyCases[j].Cases * yPointSeparation));
+                    Point point = new Point((int)((xNormalizer + j) * xPointSeparation), graph.Height - (int)(allData[i].DailyCasesData[j].Cases * yPointSeparation));
 
                     //draws the point
                     e.Graphics.FillEllipse(
@@ -180,6 +231,11 @@ namespace Covid19Graphs {
 
                 //adds the country to the list of all countries
                 allCountries.Add(c);
+        }
+
+        private void countrySelect_btn_Click(object sender, EventArgs e) {
+            CountrySelect win = new CountrySelect(this, allCountries);
+            win.Show();
         }
     }
 }

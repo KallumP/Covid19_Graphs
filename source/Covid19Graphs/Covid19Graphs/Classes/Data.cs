@@ -16,13 +16,13 @@ namespace Covid19Graphs {
         public static int longestArray = -1;
         public static int biggestCase = -1;
 
-        public CountryObj CountryObj { get; set; }
-        public CasesObj[] listOfDailyCases { get; set; }
+        public CountryObj CountryData { get; set; }
+        public CasesObj[] DailyCasesData { get; set; }
         public Color GraphColor { get; set; }
 
         public Data(CountryObj _country, CasesObj[] _cases, Color _color) {
-            CountryObj = _country;
-            listOfDailyCases = _cases;
+            CountryData = _country;
+            DailyCasesData = _cases;
             GraphColor = _color;
 
             //checks if the new array is longers than the current longest array
@@ -36,6 +36,28 @@ namespace Covid19Graphs {
 
                 //updates what the biggest number of cases is
                 biggestCase = _cases[_cases.Length - 1].Cases;
+        }
+
+        public static void FindBiggestValues(List<Data> allData) {
+
+            longestArray = -1;
+            biggestCase = -1;
+
+            foreach (Data d in allData) {
+
+                //checks if the new array is longers than the current longest array
+                if (d.DailyCasesData.Length > longestArray)
+
+                    //updates what the longest array is
+                    longestArray = d.DailyCasesData.Length;
+
+                //checks if the number of cases in the final day is bigger than the current biggest number of cases
+                if (d.DailyCasesData[d.DailyCasesData.Length - 1].Cases > biggestCase)
+
+                    //updates what the biggest number of cases is
+                    biggestCase = d.DailyCasesData[d.DailyCasesData.Length - 1].Cases;
+            }
+
         }
     }
 }
