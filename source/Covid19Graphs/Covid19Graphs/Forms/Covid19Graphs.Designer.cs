@@ -25,6 +25,7 @@
         private void InitializeComponent() {
             this.graph = new System.Windows.Forms.PictureBox();
             this.normalise_btn = new System.Windows.Forms.Button();
+            this.countrySelect_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.graph)).BeginInit();
             this.SuspendLayout();
             // 
@@ -53,11 +54,24 @@
             this.normalise_btn.UseVisualStyleBackColor = true;
             this.normalise_btn.Click += new System.EventHandler(this.normalise_btn_Click);
             // 
+            // countrySelect_btn
+            // 
+            this.countrySelect_btn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.countrySelect_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.countrySelect_btn.Location = new System.Drawing.Point(369, 393);
+            this.countrySelect_btn.Name = "countrySelect_btn";
+            this.countrySelect_btn.Size = new System.Drawing.Size(104, 56);
+            this.countrySelect_btn.TabIndex = 2;
+            this.countrySelect_btn.Text = "Select Countries";
+            this.countrySelect_btn.UseVisualStyleBackColor = true;
+            this.countrySelect_btn.Click += new System.EventHandler(this.countrySelect_btn_Click);
+            // 
             // Covid19Graphs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 461);
+            this.Controls.Add(this.countrySelect_btn);
             this.Controls.Add(this.normalise_btn);
             this.Controls.Add(this.graph);
             this.Name = "Covid19Graphs";
@@ -73,6 +87,7 @@
 
         private System.Windows.Forms.PictureBox graph;
         private System.Windows.Forms.Button normalise_btn;
+        private System.Windows.Forms.Button countrySelect_btn;
     }
 }
 
