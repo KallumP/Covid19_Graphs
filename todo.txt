@@ -1,3 +1,5 @@
 turn things like point size into a static class called settings
 
 try to turn the json passing into a list rather than an array
+
+Make a method that searches through allCountries for an input "CountryName" and returns the found object

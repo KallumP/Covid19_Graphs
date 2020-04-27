@@ -69,7 +69,7 @@ namespace Covid19Graphs {
                         longestArray = newArrayLength;
 
                     //creates a new array to hold the normalised data
-                    DailyCases[] normalisedCases = new DailyCases[newArrayLength];
+                    CasesObj[] normalisedCases = new CasesObj[newArrayLength];
 
                     int normalisedIncrementor = 0;
 

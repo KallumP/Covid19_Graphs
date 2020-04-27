@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Covid19Graphs {
 
-    public class DailyCases {
+    public class CasesObj {
 
         public DateTime Date { get; set; }
         public int Cases { get; set; }

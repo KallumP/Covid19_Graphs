@@ -11,10 +11,21 @@ using System.Windows.Forms;
 namespace Covid19Graphs {
     public partial class Covid19Graphs : Form {
 
+        /// <summary>
+        /// All the available countries
+        /// </summary>
+        List<CountryObj> allCountries;
+
+        /// <summary>
+        /// All the country data
+        /// </summary>
         List<Data> allData;
 
         int pointSize = 10;
 
+        /// <summary>
+        /// All the labels showing the country names in the right color
+        /// </summary>
         public List<Label> countryNames_txt { get; set; }
 
         /// <summary>
@@ -32,15 +43,20 @@ namespace Covid19Graphs {
         private async void Covid19Graphs_Load(object sender, EventArgs e) {
 
             //sets up the api helper class
-            ApiHelper.InitializeClient();
+            DataPuller.InitializeClient();
 
-            //sets up the list of data point arrays
+            //sets up the lists
             allData = new List<Data>();
-
+            allCountries = new List<CountryObj>();
             countryNames_txt = new List<Label>();
 
-            await LoadData();
+            //pulls all countrees
+            await LoadAllCountries();
 
+            //loads up the default data
+            await LoadDefaultData();
+
+            //draws the graph
             graph.Invalidate();
         }
 
@@ -48,12 +64,18 @@ namespace Covid19Graphs {
         /// Loads up the starting datas for the program
         /// </summary>
         /// <returns></returns>
-        private async Task LoadData() {
+        private async Task LoadDefaultData() {
 
-            await PullData("united-kingdom", "UK", Color.Red, new Point(normalise_btn.Location.X, normalise_btn.Location.Y + 30));
-            await PullData("italy", "Italy", Color.Purple, countryNames_txt[countryNames_txt.Count - 1].Location);
-            await PullData("US", "America", Color.Green, countryNames_txt[countryNames_txt.Count - 1].Location);
-            await PullData("sri-lanka", "Sri Lanka", Color.Blue, countryNames_txt[countryNames_txt.Count - 1].Location);
+            //checks to see if there is atleast one country in the list
+            if (allCountries.Count > 0)
+
+                //pulls the first country in the list
+                await PullData(allCountries[0], Color.Red, new Point(normalise_btn.Location.X, normalise_btn.Location.Y + 30));
+
+            //await PullData("united-kingdom", "UK", Color.Red, new Point(normalise_btn.Location.X, normalise_btn.Location.Y + 30));
+            //await PullData("italy", "Italy", Color.Purple, countryNames_txt[countryNames_txt.Count - 1].Location);
+            //await PullData("US", "America", Color.Green, countryNames_txt[countryNames_txt.Count - 1].Location);
+            //await PullData("sri-lanka", "Sri Lanka", Color.Blue, countryNames_txt[countryNames_txt.Count - 1].Location);
         }
 
         /// <summary>
@@ -64,21 +86,21 @@ namespace Covid19Graphs {
         /// <param name="graphColor">The color of the countries graph points</param>
         /// <param name="lastTxtLoc">The point to base the next textbox location on</param>
         /// <returns></returns>
-        async Task PullData(string slug, string _countryName, Color graphColor, Point lastTxtLoc) {
+        async Task PullData(CountryObj countryObj, Color graphColor, Point lastTxtLoc) {
 
-            DailyCases[] pulledCases;
+            CasesObj[] pulledCases;
             Label t = new Label();
 
             //pulls the entered country data
-            pulledCases = await CountryData.PullConfirmedData(slug);
+            pulledCases = await DataPuller.PullConfirmedData(countryObj.Slug);
 
             //adds the newly pulled data into the list of all datas
-            allData.Add(new Data(_countryName, pulledCases, graphColor));
+            allData.Add(new Data(countryObj, pulledCases, graphColor));
 
             //creates a new text box with the country name and color
             t.Location = new Point(lastTxtLoc.X, lastTxtLoc.Y + 30);
-            t.Text = _countryName;
-            t.Font = new Font(t.Font.FontFamily, 12); 
+            t.Text = countryObj.Country;
+            t.Font = new Font(t.Font.FontFamily, 12);
             t.ForeColor = graphColor;
             t.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Controls.Add(t);
@@ -146,6 +168,18 @@ namespace Covid19Graphs {
 
             n.Show();
             Hide();
+        }
+
+        private async Task LoadAllCountries() {
+
+            //pulls all of the countries in an array structure
+            CountryObj[] arrayOfCountries = await DataPuller.PullAllCountries();
+
+            //loops through each country in the array
+            foreach (CountryObj c in arrayOfCountries)
+
+                //adds the country to the list of all countries
+                allCountries.Add(c);
         }
     }
 }

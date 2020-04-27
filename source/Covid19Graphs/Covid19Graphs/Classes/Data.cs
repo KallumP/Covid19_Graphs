@@ -8,17 +8,20 @@ using System.Drawing;
 
 namespace Covid19Graphs {
 
+    /// <summary>
+    /// Holds information about a countries data
+    /// </summary>
     public class Data {
 
         public static int longestArray = -1;
         public static int biggestCase = -1;
 
-        public string Country { get; set; }
-        public DailyCases[] listOfDailyCases { get; set; }
+        public CountryObj CountryObj { get; set; }
+        public CasesObj[] listOfDailyCases { get; set; }
         public Color GraphColor { get; set; }
 
-        public Data(string _country, DailyCases[] _cases, Color _color) {
-            Country = _country;
+        public Data(CountryObj _country, CasesObj[] _cases, Color _color) {
+            CountryObj = _country;
             listOfDailyCases = _cases;
             GraphColor = _color;
 
