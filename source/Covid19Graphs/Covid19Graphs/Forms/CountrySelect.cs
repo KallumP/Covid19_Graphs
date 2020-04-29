@@ -10,11 +10,17 @@ using System.Windows.Forms;
 
 namespace Covid19Graphs {
     public partial class CountrySelect : Form {
+        int verticalSpacing = 25;
 
         Covid19Graphs mainWindow;
 
         List<CountryObj> countries;
 
+        /// <summary>
+        /// Counstructor
+        /// </summary>
+        /// <param name="main"></param>
+        /// <param name="_countries"></param>
         public CountrySelect(Covid19Graphs main, List<CountryObj> _countries) {
             InitializeComponent();
 
@@ -22,6 +28,11 @@ namespace Covid19Graphs {
             countries = _countries;
         }
 
+        /// <summary>
+        /// Load event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CountrySelect_Load(object sender, EventArgs e) {
             ShowAllCountries();
         }
@@ -31,7 +42,7 @@ namespace Covid19Graphs {
         /// </summary>
         void ShowAllCountries() {
 
-            int verticalSpacing = 25;
+            
 
             foreach (CountryObj c in countries) {
 
@@ -39,10 +50,24 @@ namespace Covid19Graphs {
 
                 selected.Text = c.Country;
 
-                if (Selected(c))
+                if (Selected(c)) {
                     selected.Checked = true;
-                else
+
+                    foreach ( Data d in mainWindow.allData) {
+                        if (d.CountryData.Country == c.Country) {
+
+                            selected.ForeColor = d.GraphColor;
+
+                            break;
+
+                        }
+                    }
+
+                } else {
+
                     selected.Checked = false;
+
+                }
 
                 selected.Location = new Point(10, allCountries_pnl.Controls.Count * verticalSpacing);
 
@@ -50,6 +75,53 @@ namespace Covid19Graphs {
 
                 allCountries_pnl.Controls.Add(selected);
             }
+        }
+
+        /// <summary>
+        /// Shows all countries of a given input
+        /// </summary>
+        /// <param name="toShow"></param>
+        void ShowAllCountries(string toShow) {
+
+            allCountries_pnl.Controls.Clear();
+
+            foreach (CountryObj c in countries) {
+
+                if (c.Country == toShow) {
+
+                    CheckBox selected = new CheckBox();
+
+                    selected.Text = c.Country;
+
+                    if (Selected(c)) {
+                        selected.Checked = true;
+
+                        foreach (Data d in mainWindow.allData) {
+
+                            if (d.CountryData.Country == c.Country) {
+
+                                selected.ForeColor = d.GraphColor;
+
+                                break;
+                            }
+                        }
+
+                    } else {
+
+                        selected.Checked = false;
+
+                    }
+
+                    selected.Location = new Point(10, allCountries_pnl.Controls.Count * verticalSpacing);
+
+                    selected.CheckedChanged += CheckChange;
+
+                    allCountries_pnl.Controls.Add(selected);
+                }
+
+
+            }
+
         }
 
         /// <summary>
@@ -131,14 +203,26 @@ namespace Covid19Graphs {
                 await mainWindow.PullData(toPullData, Color.Red, mainWindow.countryNames_txt[mainWindow.countryNames_txt.Count - 1].Location);
         }
 
+        /// <summary>
+        /// Tells the main window to remove a country's data
+        /// </summary>
+        /// <param name="toRemove">The country whos data to remove</param>
         void DeSelect(CountryObj toRemove) {
 
             mainWindow.RemoveCountryData(toRemove);
         }
 
+        /// <summary>
+        /// Closes the window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void back_btn_Click(object sender, EventArgs e) {
             Close();
         }
 
+        private void searchBox_txt_TextChanged(object sender, EventArgs e) {
+            ShowAllCountries(searchBox_txt.Text);
+        }
     }
 }

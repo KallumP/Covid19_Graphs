@@ -11,6 +11,7 @@ using System.Windows.Forms;
 namespace Covid19Graphs {
     public partial class Covid19Graphs : Form {
 
+        #region Variables & Properties
         /// <summary>
         /// All the available countries
         /// </summary>
@@ -27,6 +28,7 @@ namespace Covid19Graphs {
         /// All the labels showing the country names in the right color
         /// </summary>
         public List<Label> countryNames_txt { get; set; }
+        #endregion
 
         /// <summary>
         /// Constructor
@@ -124,6 +126,10 @@ namespace Covid19Graphs {
 
         }
 
+        /// <summary>
+        /// Removes a country object from the list of all data 
+        /// </summary>
+        /// <param name="toRemove"></param>
         public void RemoveCountryData(CountryObj toRemove) {
 
             //loops through all the data
@@ -158,7 +164,6 @@ namespace Covid19Graphs {
                 }
             }
         }
-
 
         /// <summary>
         /// Graph paint event
@@ -221,6 +226,10 @@ namespace Covid19Graphs {
             Hide();
         }
 
+        /// <summary>
+        /// Loads all the countries available to pull data for
+        /// </summary>
+        /// <returns></returns>
         private async Task LoadAllCountries() {
 
             //pulls all of the countries in an array structure
@@ -233,6 +242,11 @@ namespace Covid19Graphs {
                 allCountries.Add(c);
         }
 
+        /// <summary>
+        /// Event for openeing the country select form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void countrySelect_btn_Click(object sender, EventArgs e) {
             CountrySelect win = new CountrySelect(this, allCountries);
             win.Show();
