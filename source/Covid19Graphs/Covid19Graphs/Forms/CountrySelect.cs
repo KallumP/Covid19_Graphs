@@ -42,39 +42,11 @@ namespace Covid19Graphs {
         /// </summary>
         void ShowAllCountries() {
 
-            
+            //loops through each country
+            foreach (CountryObj c in countries)
 
-            foreach (CountryObj c in countries) {
-
-                CheckBox selected = new CheckBox();
-
-                selected.Text = c.Country;
-
-                if (Selected(c)) {
-                    selected.Checked = true;
-
-                    foreach ( Data d in mainWindow.allData) {
-                        if (d.CountryData.Country == c.Country) {
-
-                            selected.ForeColor = d.GraphColor;
-
-                            break;
-
-                        }
-                    }
-
-                } else {
-
-                    selected.Checked = false;
-
-                }
-
-                selected.Location = new Point(10, allCountries_pnl.Controls.Count * verticalSpacing);
-
-                selected.CheckedChanged += CheckChange;
-
-                allCountries_pnl.Controls.Add(selected);
-            }
+                //loads the country
+                LoadCountryAsCheckBox(c);
         }
 
         /// <summary>
@@ -83,45 +55,68 @@ namespace Covid19Graphs {
         /// <param name="toShow"></param>
         void ShowAllCountries(string toShow) {
 
+            //removes all the checkboxes
             allCountries_pnl.Controls.Clear();
 
-            foreach (CountryObj c in countries) {
+            //loops through each country
+            foreach (CountryObj c in countries)
 
-                if (c.Country == toShow) {
+                //checks if the current country is the same as the input
+                if (c.Country == toShow)
 
-                    CheckBox selected = new CheckBox();
+                    //loads the country
+                    LoadCountryAsCheckBox(c);
+        }
 
-                    selected.Text = c.Country;
+        /// <summary>
+        /// Turns the input country into a checkbox
+        /// </summary>
+        /// <param name="c">The country to convert</param>
+        void LoadCountryAsCheckBox(CountryObj c) {
 
-                    if (Selected(c)) {
-                        selected.Checked = true;
+            //a checkbox to work with
+            CheckBox selected = new CheckBox();
 
-                        foreach (Data d in mainWindow.allData) {
+            //sets the checkbox's text to the country name of the input
+            selected.Text = c.Country;
 
-                            if (d.CountryData.Country == c.Country) {
+            //checks if the country was already being shown in the main window
+            if (Selected(c)) {
 
-                                selected.ForeColor = d.GraphColor;
+                //sets the check status to ticked
+                selected.Checked = true;
 
-                                break;
-                            }
-                        }
+                //loops through each dataset in the main window
+                foreach (Data d in mainWindow.allData) {
 
-                    } else {
+                    //checks if the data's country is the same as the input country
+                    if (d.CountryData.Country == c.Country) {
 
-                        selected.Checked = false;
+                        //sets the checkbox font color to be the same as the graph color
+                        selected.ForeColor = d.GraphColor;
 
+                        //stops searching
+                        break;
                     }
-
-                    selected.Location = new Point(10, allCountries_pnl.Controls.Count * verticalSpacing);
-
-                    selected.CheckedChanged += CheckChange;
-
-                    allCountries_pnl.Controls.Add(selected);
                 }
 
+            } else {
 
+                //sets the checkbox to unticked
+                selected.Checked = false;
+
+                //sets the default color to black;
+                selected.ForeColor = Color.Black;
             }
 
+            //sets the location of the checkbox under the last one
+            selected.Location = new Point(10, allCountries_pnl.Controls.Count * verticalSpacing);
+
+            //sets up what method to call on click
+            selected.CheckedChanged += CheckChange;
+
+            //adds the checkbox to the panel
+            allCountries_pnl.Controls.Add(selected);
         }
 
         /// <summary>
@@ -158,10 +153,16 @@ namespace Covid19Graphs {
             CountryObj country = ReturnCountryObj(c.Text, countries);
 
             //selects or deselectes based on the check status of the checkbox
-            if (c.Checked)
-                Select(country);
+            if (c.Checked) {
 
-            else
+                //checks if the checkbox font color is black (if so ask for a color)
+                if (c.ForeColor == Color.Black)
+                    OpenColorSelect();
+
+                Select(country, ColorSelect.Chosen);
+
+            } else
+
                 DeSelect(country);
         }
 
@@ -189,18 +190,18 @@ namespace Covid19Graphs {
         /// Selects the country in the main window
         /// </summary>
         /// <param name="toPullData"></param>
-        async void Select(CountryObj toPullData) {
+        async void Select(CountryObj toPullData, Color graphColor) {
 
             //checks to see if this is the first country
             if (mainWindow.countryNames_txt.Count == 0)
 
                 //puts the first label under the normalise button
-                await mainWindow.PullData(toPullData, Color.Red, new Point(mainWindow.normalise_btn.Location.X, mainWindow.normalise_btn.Location.Y + 30));
+                await mainWindow.PullData(toPullData, graphColor, new Point(mainWindow.normalise_btn.Location.X, mainWindow.normalise_btn.Location.Y + 30));
 
             else
 
                 //puts the new label under the previous label
-                await mainWindow.PullData(toPullData, Color.Red, mainWindow.countryNames_txt[mainWindow.countryNames_txt.Count - 1].Location);
+                await mainWindow.PullData(toPullData, graphColor, mainWindow.countryNames_txt[mainWindow.countryNames_txt.Count - 1].Location);
         }
 
         /// <summary>
@@ -221,8 +222,25 @@ namespace Covid19Graphs {
             Close();
         }
 
+        /// <summary>
+        /// Text change event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void searchBox_txt_TextChanged(object sender, EventArgs e) {
+
+            //searches the new text
             ShowAllCountries(searchBox_txt.Text);
+        }
+
+        /// <summary>
+        /// Opens the color select window
+        /// </summary>
+        void OpenColorSelect() {
+
+            ColorSelect win = new ColorSelect();
+
+            win.Show();
         }
     }
 }
