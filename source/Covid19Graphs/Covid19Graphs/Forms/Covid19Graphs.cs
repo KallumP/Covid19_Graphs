@@ -11,6 +11,7 @@ using System.Windows.Forms;
 namespace Covid19Graphs {
     public partial class Covid19Graphs : Form {
 
+        #region Variables & Properties
         /// <summary>
         /// All the available countries
         /// </summary>
@@ -27,6 +28,7 @@ namespace Covid19Graphs {
         /// All the labels showing the country names in the right color
         /// </summary>
         public List<Label> countryNames_txt { get; set; }
+        #endregion
 
         /// <summary>
         /// Constructor
@@ -67,22 +69,22 @@ namespace Covid19Graphs {
 
             toPull = CountrySelect.ReturnCountryObj("United Kingdom", allCountries);
             if (toPull != null)
-                await PullData(toPull, Color.Red, new Point(normalise_btn.Location.X, normalise_btn.Location.Y + 30));
-            
+                await PullData(toPull, Color.Red);
+
 
             toPull = CountrySelect.ReturnCountryObj("Italy", allCountries);
             if (toPull != null)
-                await PullData(toPull, Color.Purple, countryNames_txt[countryNames_txt.Count - 1].Location);
+                await PullData(toPull, Color.Purple);
 
 
             toPull = CountrySelect.ReturnCountryObj("United States of America", allCountries);
             if (toPull != null)
-                await PullData(toPull, Color.Green, countryNames_txt[countryNames_txt.Count - 1].Location);
+                await PullData(toPull, Color.Green);
 
 
             toPull = CountrySelect.ReturnCountryObj("Sri Lanka", allCountries);
             if (toPull != null)
-                await PullData(toPull, Color.Blue, countryNames_txt[countryNames_txt.Count - 1].Location);
+                await PullData(toPull, Color.Blue);
         }
 
         /// <summary>
@@ -93,7 +95,21 @@ namespace Covid19Graphs {
         /// <param name="graphColor">The color of the countries graph points</param>
         /// <param name="lastTxtLoc">The point to base the next textbox location on</param>
         /// <returns></returns>
-        public async Task PullData(CountryObj countryObj, Color graphColor, Point lastTxtLoc) {
+        public async Task PullData(CountryObj countryObj, Color graphColor) {
+
+            //the tobe location of the new 
+            Point location = new Point(normalise_btn.Location.X, -1);
+
+            //checks if this is the first label
+            if (countryNames_txt.Count == 0)
+
+                //adds the label under the normalise button
+                location.Y = normalise_btn.Location.Y + normalise_btn.Height + 30;
+
+            else
+
+                //adds the label under the last label
+                location.Y = countryNames_txt[countryNames_txt.Count - 1].Location.Y + countryNames_txt[countryNames_txt.Count - 1].Height + 30;
 
             CasesObj[] pulledCases;
             Label t = new Label();
@@ -107,12 +123,14 @@ namespace Covid19Graphs {
                 //adds the newly pulled data into the list of all datas
                 allData.Add(new Data(countryObj, pulledCases, graphColor));
 
-                //creates a new text box with the country name and color
-                t.Location = new Point(lastTxtLoc.X, lastTxtLoc.Y + 30);
+                //creates and sets up a new text box with the country name and color
+                t.Location = location;
                 t.Text = countryObj.Country;
                 t.Font = new Font(t.Font.FontFamily, 12);
                 t.ForeColor = graphColor;
                 t.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+                t.AutoSize = true;
+                t.MaximumSize = new Size(normalise_btn.Width, 0);
                 Controls.Add(t);
 
                 //adds the new text box
@@ -124,6 +142,10 @@ namespace Covid19Graphs {
 
         }
 
+        /// <summary>
+        /// Removes a country object from the list of all data 
+        /// </summary>
+        /// <param name="toRemove"></param>
         public void RemoveCountryData(CountryObj toRemove) {
 
             //loops through all the data
@@ -141,6 +163,7 @@ namespace Covid19Graphs {
                             //removes the text box from the text box list and the controls list
                             Controls.Remove(countryNames_txt[j]);
                             countryNames_txt.Remove(countryNames_txt[j]);
+                            RealignCountryLabels();
                         }
                     }
 
@@ -154,11 +177,10 @@ namespace Covid19Graphs {
                     graph.Invalidate();
 
                     //stops the search
-                    break; ;
+                    break;
                 }
             }
         }
-
 
         /// <summary>
         /// Graph paint event
@@ -221,6 +243,10 @@ namespace Covid19Graphs {
             Hide();
         }
 
+        /// <summary>
+        /// Loads all the countries available to pull data for
+        /// </summary>
+        /// <returns></returns>
         private async Task LoadAllCountries() {
 
             //pulls all of the countries in an array structure
@@ -233,9 +259,38 @@ namespace Covid19Graphs {
                 allCountries.Add(c);
         }
 
+        /// <summary>
+        /// Event for openeing the country select form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void countrySelect_btn_Click(object sender, EventArgs e) {
             CountrySelect win = new CountrySelect(this, allCountries);
             win.Show();
+        }
+
+        /// <summary>
+        /// Removes gaps in the list of country labels
+        /// </summary>
+        void RealignCountryLabels() {
+
+            //used to check if the label being checked is in the highest position
+            int expectedHeight = normalise_btn.Location.Y + normalise_btn.Height + 30;
+
+            //loops through each label
+            foreach (Label l in countryNames_txt) {
+
+                //checks if the label is not in the right position
+                if (l.Location.Y != expectedHeight)
+
+                    //sets the location of the label to the correct position
+                    l.Location = new Point(l.Location.X, expectedHeight);
+
+                //updates the correct position to the next available space
+                expectedHeight = l.Location.Y + l.Size.Height + 30;
+
+            }
+
         }
     }
 }

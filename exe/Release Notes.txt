@@ -1,0 +1,21 @@
+1.1
+
+country title labels now move up if a label above them is deleted
+
+country picking checkboxes now show full text
+
+country title labels will let the text onto the next line to show the full text
+
+country title labels will not overlap
+
+country title label creation optimised slightly
+
+color picker for new country data
+
+
+
+1.0
+
+country picker
+
+loads data about countries

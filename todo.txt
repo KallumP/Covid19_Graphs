@@ -1,7 +1,7 @@
-turn things like point size into a static class called settings
+turn things like point size into a static class called settings along with
+countryTitle.txt start point and spacing
+colorPick.btn start point and spacing
 
-The default data should search for the country in the list of all countries
-and if that search did not return null, add that country
 
 
-color picker for graph color
+put country title labels into a panel so that it can be scrolled
