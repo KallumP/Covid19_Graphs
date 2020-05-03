@@ -11,3 +11,5 @@ the select method is on a while loop until the window's bool method is true
 after the method, set it back to false
 
 turn the color buttons into programatic
+
+realighn all labels when one is deleted

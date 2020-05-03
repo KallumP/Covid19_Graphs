@@ -16,6 +16,8 @@ namespace Covid19Graphs {
 
         List<CountryObj> countries;
 
+        Color graphColor;
+
         /// <summary>
         /// Counstructor
         /// </summary>
@@ -35,6 +37,7 @@ namespace Covid19Graphs {
         /// <param name="e"></param>
         private void CountrySelect_Load(object sender, EventArgs e) {
             ShowAllCountries();
+            SetupColorPick();
         }
 
         /// <summary>
@@ -71,29 +74,31 @@ namespace Covid19Graphs {
         /// <summary>
         /// Turns the input country into a checkbox
         /// </summary>
-        /// <param name="c">The country to convert</param>
-        void LoadCountryAsCheckBox(CountryObj c) {
+        /// <param name="country">The country to convert</param>
+        void LoadCountryAsCheckBox(CountryObj country) {
 
             //a checkbox to work with
-            CheckBox selected = new CheckBox();
+            CheckBox c = new CheckBox();
 
             //sets the checkbox's text to the country name of the input
-            selected.Text = c.Country;
+            c.Text = country.Country;
+            c.MaximumSize = new Size(allCountries_pnl.Width, 50);
+            c.FlatStyle = FlatStyle.Flat;
 
             //checks if the country was already being shown in the main window
-            if (Selected(c)) {
+            if (Selected(country)) {
 
                 //sets the check status to ticked
-                selected.Checked = true;
+                c.Checked = true;
 
                 //loops through each dataset in the main window
                 foreach (Data d in mainWindow.allData) {
 
                     //checks if the data's country is the same as the input country
-                    if (d.CountryData.Country == c.Country) {
+                    if (d.CountryData.Country == country.Country) {
 
                         //sets the checkbox font color to be the same as the graph color
-                        selected.ForeColor = d.GraphColor;
+                        c.ForeColor = d.GraphColor;
 
                         //stops searching
                         break;
@@ -103,20 +108,20 @@ namespace Covid19Graphs {
             } else {
 
                 //sets the checkbox to unticked
-                selected.Checked = false;
+                c.Checked = false;
 
                 //sets the default color to black;
-                selected.ForeColor = Color.Black;
+                c.ForeColor = Color.Black;
             }
 
             //sets the location of the checkbox under the last one
-            selected.Location = new Point(10, allCountries_pnl.Controls.Count * verticalSpacing);
+            c.Location = new Point(10, allCountries_pnl.Controls.Count * verticalSpacing);
 
             //sets up what method to call on click
-            selected.CheckedChanged += CheckChange;
+            c.CheckedChanged += CheckChange;
 
             //adds the checkbox to the panel
-            allCountries_pnl.Controls.Add(selected);
+            allCountries_pnl.Controls.Add(c);
         }
 
         /// <summary>
@@ -155,15 +160,17 @@ namespace Covid19Graphs {
             //selects or deselectes based on the check status of the checkbox
             if (c.Checked) {
 
-                //checks if the checkbox font color is black (if so ask for a color)
-                if (c.ForeColor == Color.Black)
-                    OpenColorSelect();
+                Select(country, graphColor);
 
-                Select(country, ColorSelect.Chosen);
+                c.ForeColor = graphColor;
 
-            } else
-
+            } else {
+                
                 DeSelect(country);
+
+                c.ForeColor = Color.Black;
+            }
+
         }
 
         /// <summary>
@@ -234,13 +241,48 @@ namespace Covid19Graphs {
         }
 
         /// <summary>
-        /// Opens the color select window
+        /// Sets up the buttons used to pick the graph color
         /// </summary>
-        void OpenColorSelect() {
+        void SetupColorPick() {
 
-            ColorSelect win = new ColorSelect();
+            int verticalSpacing = 64;
 
-            win.Show();
+            int height = 13 - 64;
+
+            AddButton(new Size(58, 58), Color.Red, new Point(433, height += verticalSpacing));
+            AddButton(new Size(58, 58), Color.Orange, new Point(433, height += verticalSpacing));
+            AddButton(new Size(58, 58), Color.Yellow, new Point(433, height += verticalSpacing));
+            AddButton(new Size(58, 58), Color.Lime, new Point(433, height += verticalSpacing));
+            AddButton(new Size(58, 58), Color.Aqua, new Point(433, height += verticalSpacing));
+            AddButton(new Size(58, 58), Color.Blue, new Point(433, height += verticalSpacing));
+            AddButton(new Size(58, 58), Color.Fuchsia, new Point(433, height += verticalSpacing));
+
+        }
+
+        void AddButton(Size size, Color color, Point location) {
+            Button b;
+
+            b = new Button();
+            b.ForeColor = Color.Black;
+            b.Size = size;
+
+            b.BackColor = color;
+            b.Location = location;
+
+            b.FlatStyle = FlatStyle.Flat;
+
+            b.Click += ColorButtonClick;
+
+            Controls.Add(b);
+        }
+
+        private void ColorButtonClick(object sender, EventArgs e) {
+
+            //turns the source back into a button
+            Button c = sender as Button;
+
+            graphColor = c.BackColor;
+
         }
     }
 }
