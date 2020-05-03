@@ -82,7 +82,8 @@ namespace Covid19Graphs {
 
             //sets the checkbox's text to the country name of the input
             c.Text = country.Country;
-            c.MaximumSize = new Size(allCountries_pnl.Width, 50);
+            c.MaximumSize = new Size(0, 0);
+            c.AutoSize = true;
             c.FlatStyle = FlatStyle.Flat;
 
             //checks if the country was already being shown in the main window
@@ -165,7 +166,7 @@ namespace Covid19Graphs {
                 c.ForeColor = graphColor;
 
             } else {
-                
+
                 DeSelect(country);
 
                 c.ForeColor = Color.Black;
@@ -199,16 +200,9 @@ namespace Covid19Graphs {
         /// <param name="toPullData"></param>
         async void Select(CountryObj toPullData, Color graphColor) {
 
-            //checks to see if this is the first country
-            if (mainWindow.countryNames_txt.Count == 0)
 
-                //puts the first label under the normalise button
-                await mainWindow.PullData(toPullData, graphColor, new Point(mainWindow.normalise_btn.Location.X, mainWindow.normalise_btn.Location.Y + 30));
-
-            else
-
-                //puts the new label under the previous label
-                await mainWindow.PullData(toPullData, graphColor, mainWindow.countryNames_txt[mainWindow.countryNames_txt.Count - 1].Location);
+            //tells the main window to add the new country's data
+            await mainWindow.PullData(toPullData, graphColor);
         }
 
         /// <summary>
@@ -256,9 +250,14 @@ namespace Covid19Graphs {
             AddButton(new Size(58, 58), Color.Aqua, new Point(433, height += verticalSpacing));
             AddButton(new Size(58, 58), Color.Blue, new Point(433, height += verticalSpacing));
             AddButton(new Size(58, 58), Color.Fuchsia, new Point(433, height += verticalSpacing));
-
         }
 
+        /// <summary>
+        /// Adds a button of a certain size, back color in the right location
+        /// </summary>
+        /// <param name="size">The size of the button</param>
+        /// <param name="color">The background color of the button</param>
+        /// <param name="location">The location of the button on the form</param>
         void AddButton(Size size, Color color, Point location) {
             Button b;
 
@@ -276,6 +275,11 @@ namespace Covid19Graphs {
             Controls.Add(b);
         }
 
+        /// <summary>
+        /// Click event for the color picker buttons
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ColorButtonClick(object sender, EventArgs e) {
 
             //turns the source back into a button

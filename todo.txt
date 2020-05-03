@@ -1,15 +1,7 @@
-turn things like point size into a static class called settings
+turn things like point size into a static class called settings along with
+countryTitle.txt start point and spacing
+colorPick.btn start point and spacing
 
-The default data should search for the country in the list of all countries
-and if that search did not return null, add that country
 
 
-color picker for graph color
-need to wait until the user clicks choose before adding the country to the graph
-maybe use bool variables
-the select method is on a while loop until the window's bool method is true
-after the method, set it back to false
-
-turn the color buttons into programatic
-
-realighn all labels when one is deleted
+put country title labels into a panel so that it can be scrolled
