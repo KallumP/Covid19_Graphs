@@ -22,12 +22,9 @@ namespace Covid19Graphs {
         /// </summary>
         public List<Data> allData { get; set; }
 
-        int pointSize = 10;
-
         /// <summary>
         /// All the labels showing the country names in the right color
         /// </summary>
-        public List<Label> countryNames_txt { get; set; }
         #endregion
 
         /// <summary>
@@ -50,7 +47,11 @@ namespace Covid19Graphs {
             //sets up the lists
             allData = new List<Data>();
             allCountries = new List<CountryObj>();
-            countryNames_txt = new List<Label>();
+
+            //makes the vertical scroll bar always visible
+            countryTitle_pnl.VerticalScroll.Enabled = true;
+            countryTitle_pnl.VerticalScroll.Visible = true;
+            countryTitle_pnl.AutoScroll = true;
 
             //pulls all countrees
             await LoadAllCountries();
@@ -98,18 +99,13 @@ namespace Covid19Graphs {
         public async Task PullData(CountryObj countryObj, Color graphColor) {
 
             //the tobe location of the new 
-            Point location = new Point(normalise_btn.Location.X, -1);
+            Point location = new Point(0, 0);
 
-            //checks if this is the first label
-            if (countryNames_txt.Count == 0)
-
-                //adds the label under the normalise button
-                location.Y = normalise_btn.Location.Y + normalise_btn.Height + 30;
-
-            else
+            //checks if this is not the first label
+            if (countryTitle_pnl.Controls.Count != 0)
 
                 //adds the label under the last label
-                location.Y = countryNames_txt[countryNames_txt.Count - 1].Location.Y + countryNames_txt[countryNames_txt.Count - 1].Height + 30;
+                location.Y = countryTitle_pnl.Controls[countryTitle_pnl.Controls.Count - 1].Location.Y + countryTitle_pnl.Controls[countryTitle_pnl.Controls.Count - 1].Height + 30;
 
             CasesObj[] pulledCases;
             Label t = new Label();
@@ -131,15 +127,11 @@ namespace Covid19Graphs {
                 t.Anchor = AnchorStyles.Top | AnchorStyles.Right;
                 t.AutoSize = true;
                 t.MaximumSize = new Size(normalise_btn.Width, 0);
-                Controls.Add(t);
-
-                //adds the new text box
-                countryNames_txt.Add(t);
+                countryTitle_pnl.Controls.Add(t);
 
                 //draws the graph
                 graph.Invalidate();
             }
-
         }
 
         /// <summary>
@@ -155,14 +147,14 @@ namespace Covid19Graphs {
                 if (allData[i].CountryData == toRemove) {
 
                     //loops through each of the textboxes
-                    for (int j = 0; j < countryNames_txt.Count(); j++) {
+                    for (int j = 0; j < countryTitle_pnl.Controls.Count; j++) {
 
                         //checks if the text box's text was the same as the country to remove's name
-                        if (countryNames_txt[j].Text == toRemove.Country) {
+                        if (countryTitle_pnl.Controls[j].Text == toRemove.Country) {
 
                             //removes the text box from the text box list and the controls list
-                            Controls.Remove(countryNames_txt[j]);
-                            countryNames_txt.Remove(countryNames_txt[j]);
+                            Controls.Remove(countryTitle_pnl.Controls[j]);
+                            countryTitle_pnl.Controls.Remove(countryTitle_pnl.Controls[j]);
                             RealignCountryLabels();
                         }
                     }
@@ -215,8 +207,8 @@ namespace Covid19Graphs {
                         b,
                         point.X,
                         point.Y - graphPush,
-                        pointSize,
-                        pointSize);
+                        Settings.graphNodeSize,
+                        Settings.graphNodeSize);
                 }
             }
         }
@@ -227,6 +219,7 @@ namespace Covid19Graphs {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Covid19Graphs_Resize(object sender, EventArgs e) {
+
             graph.Invalidate();
         }
 
@@ -237,7 +230,7 @@ namespace Covid19Graphs {
         /// <param name="e"></param>
         private void normalise_btn_Click(object sender, EventArgs e) {
 
-            NormalisedData n = new NormalisedData(allData, this);
+            NormalisedData n = new NormalisedData(allData, countryTitle_pnl.Controls, this);
 
             n.Show();
             Hide();
@@ -275,10 +268,10 @@ namespace Covid19Graphs {
         void RealignCountryLabels() {
 
             //used to check if the label being checked is in the highest position
-            int expectedHeight = normalise_btn.Location.Y + normalise_btn.Height + 30;
+            int expectedHeight = 0;
 
             //loops through each label
-            foreach (Label l in countryNames_txt) {
+            foreach (Label l in countryTitle_pnl.Controls) {
 
                 //checks if the label is not in the right position
                 if (l.Location.Y != expectedHeight)

@@ -19,7 +19,8 @@ namespace Covid19Graphs {
 
         int longestArray = -1;
 
-        public NormalisedData(List<Data> _normalised, Covid19Graphs _mainWindow) {
+        public NormalisedData(List<Data> _normalised, Control.ControlCollection countryTitleControls, Covid19Graphs _mainWindow) {
+
             InitializeComponent();
 
             normalisedData = new List<Data>(_normalised);
@@ -28,6 +29,11 @@ namespace Covid19Graphs {
 
             LoadData(100);
 
+            //adds the list of country title labels into the panel
+            foreach (Control c in countryTitleControls) 
+
+                countryTitles_pnl.Controls.Add(c);
+            
             graph.Invalidate();
         }
 
@@ -114,8 +120,8 @@ namespace Covid19Graphs {
                         b,
                         point.X,
                         point.Y - graphPush,
-                        pointSize,
-                        pointSize);
+                        Settings.graphNodeSize,
+                        Settings.graphNodeSize);
                 }
             }
         }

@@ -1,7 +1,10 @@
-turn things like point size into a static class called settings along with
-countryTitle.txt start point and spacing
-colorPick.btn start point and spacing
+put colorPick.btn start point and spacing into settings class
 
+add an option to set how many days to normalise to
 
+lines between each graph node
 
-put country title labels into a panel so that it can be scrolled
+labels to show the maximum and minimum values (and some in between)
+find out how many in the middle using the picturebox size
+
+labels to show the date on the x axis
